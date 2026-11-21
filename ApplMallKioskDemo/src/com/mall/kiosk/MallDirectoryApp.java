@@ -109,7 +109,7 @@ public class MallDirectoryApp {
 
         JPanel formPanel = new JPanel(new GridLayout(4, 1, 10, 10));
         String[] services = {
-                "Wheelchair / Stroller Loan (Central Concierge)",
+                "Stroller Loan (Central Concierge)",
                 "Lost & Found Report",
                 "Security Escort to Parking",
                 "Gift Wrapping & Parcel Hold"
