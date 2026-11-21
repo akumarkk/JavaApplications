@@ -18,7 +18,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class MallServiceApp {
-    private static final int PORT = 8080;
+    private static final int DEFAULT_PORT = 8989;
+    private static final int PORT = resolvePort();
     private static final Map<String, StoreInfo> STORES = new LinkedHashMap<>();
     private static final AtomicInteger TICKET_COUNTER = new AtomicInteger(100);
 
@@ -118,6 +119,23 @@ public class MallServiceApp {
 
     private static String escape(String text) {
         return text.replace("\\", "\\\\").replace("\"", "\\\"");
+    }
+
+    private static int resolvePort() {
+        String envPort = System.getenv("MALL_SERVICE_PORT");
+        if (envPort == null || envPort.isBlank()) {
+            return DEFAULT_PORT;
+        }
+        try {
+            int parsed = Integer.parseInt(envPort.trim());
+            if (parsed >= 1 && parsed <= 65535) {
+                return parsed;
+            }
+            System.err.println("Invalid PORT value '" + envPort + "' (must be 1-65535); using default " + DEFAULT_PORT);
+        } catch (NumberFormatException e) {
+            System.err.println("Invalid PORT value '" + envPort + "'; using default " + DEFAULT_PORT);
+        }
+        return DEFAULT_PORT;
     }
 
     private record StoreInfo(String location, String directions, String hours) {}
